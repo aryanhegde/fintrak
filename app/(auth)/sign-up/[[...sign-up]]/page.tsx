@@ -17,7 +17,7 @@ export default function Page() {
             <SignUp path="/sign-up" />;
           </ClerkLoaded>
           <ClerkLoading>
-            <Loader2 />
+            <Loader2 className="animate-spin" />
           </ClerkLoading>
         </div>
       </div>
