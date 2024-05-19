@@ -1,7 +1,11 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { NavButton } from "./nav-button";
+import { useMedia } from "react-use";
+import { useState } from "react";
+import { Sheet, SheetTrigger } from "./ui/sheet";
+import { Button } from "./ui/button";
 
 const routes = [
   {
@@ -27,7 +31,11 @@ const routes = [
 ];
 
 export const Navigation = () => {
+  const [isOpened, setIsOpened] = useState(false);
+
+  const router = useRouter();
   const pathname = usePathname();
+  const isMobile = useMedia("(max-width: 1024px)", false);
 
   return (
     <nav className="hidden lg:flex items-center gap-x-2 overflow-x-auto">
