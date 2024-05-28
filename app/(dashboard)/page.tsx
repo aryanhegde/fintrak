@@ -1,19 +1,13 @@
 "use client";
 
-import { getUserAccounts } from "@/fearures/accounts/api/use-get-acounts";
-
+import { Button } from "@/components/ui/button";
+import { useNewAccount } from "@/fearures/accounts/hooks/use-new-account";
 export default function Home() {
-  const { data: accounts, isLoading } = getUserAccounts();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const { onOpen } = useNewAccount();
 
   return (
     <div>
-      {accounts?.map((account) => (
-        <div key={account.id}>{account.name}</div>
-      ))}
+      <Button onClick={onOpen}>Add new button</Button>
     </div>
   );
 }
