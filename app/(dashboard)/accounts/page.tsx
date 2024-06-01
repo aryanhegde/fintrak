@@ -9,11 +9,17 @@ import { columns } from "./columns";
 import { DataTable } from "@/components/data-table";
 import { getUserAccounts } from "@/fearures/accounts/api/use-get-acounts";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useBulkDeleteAccounts } from "@/fearures/accounts/api/use-bulk-delete";
 
 const AccountsPage = () => {
   const newAccount = useNewAccount();
+  const deleteAccounts = useBulkDeleteAccounts();
+
   const accountsQuery = getUserAccounts();
+
   const accounts = accountsQuery.data || [];
+
+  const isDisabled = false;
 
   if (accountsQuery.isLoading) {
     return (
@@ -47,8 +53,11 @@ const AccountsPage = () => {
             columns={columns}
             data={accounts}
             filterKey="email"
-            onDelete={() => {}}
-            disabled
+            onDelete={(row) => {
+              const ids = row.map((r) => r.original.id);
+              deleteAccounts.mutate({ ids });
+            }}
+            disabled={isDisabled}
           />
         </CardContent>
       </Card>
