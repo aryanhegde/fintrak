@@ -3,6 +3,7 @@
 import { useMountedState } from "react-use";
 
 import { NewAccountSheet } from "@/fearures/accounts/components/new-account-sheet";
+import { EditAccountSheet } from "@/fearures/accounts/components/edit-account-sheet";
 
 export const SheetProvider = () => {
   const isMounted = useMountedState();
@@ -12,6 +13,7 @@ export const SheetProvider = () => {
   return (
     <>
       <NewAccountSheet />
+      <EditAccountSheet />
     </>
   );
 };
