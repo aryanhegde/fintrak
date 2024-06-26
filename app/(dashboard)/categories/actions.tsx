@@ -7,8 +7,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useDeleteAccount } from "@/fearures/accounts/api/use-delete-account";
-import { useOpenAccount } from "@/fearures/accounts/hooks/use-open-account";
+import { useDeleteCategory } from "@/fearures/categories/api/use-delete-category";
+import { useOpenCategory } from "@/fearures/categories/hooks/use-open-category";
 import { useConfirm } from "@/hooks/use-confirm";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 
@@ -19,12 +19,12 @@ type Props = {
 const Actions = ({ id }: Props) => {
   const [ConfirmDialouge, confirm] = useConfirm(
     "Are you sure?",
-    "You are about to delete this account."
+    "You are about to delete this category."
   );
 
-  const deleteMutation = useDeleteAccount(id);
+  const deleteMutation = useDeleteCategory(id);
 
-  const { onOpen } = useOpenAccount();
+  const { onOpen } = useOpenCategory();
 
   const handleDelete = async () => {
     const ok = await confirm();
