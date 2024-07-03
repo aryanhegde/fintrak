@@ -5,24 +5,60 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { useNewAccount } from "@/fearures/accounts/hooks/use-new-account";
-import { AccountForm } from "./account-form";
-import { insertAccountSchema } from "@/db/schema";
+import { insertTransactionSchema } from "@/db/schema";
+
 import { z } from "zod";
 import { useCreateTransaction } from "../api/use-create-transaction";
+import { useNewTransaction } from "../hooks/use-new-transaction";
+import { useCreateCategory } from "@/fearures/categories/api/use-create-category";
+import { getUserCategories } from "@/fearures/categories/api/use-get-categories";
+import { getUserAccounts } from "@/fearures/accounts/api/use-get-acounts";
+import { useCreateAccount } from "@/fearures/accounts/api/use-create-account";
+import { TransactionForm } from "./transaction-form";
+import { Loader2 } from "lucide-react";
 
-const formSchema = insertAccountSchema.pick({
-  name: true,
+const formSchema = insertTransactionSchema.omit({
+  id: true,
 });
 
 type FormValues = z.input<typeof formSchema>;
 
 export const NewTransactionSheet = () => {
-  const { isOpen, onClose } = useNewAccount();
+  const { isOpen, onClose } = useNewTransaction();
 
-  const mutation = useCreateTransaction();
+  const createMutation = useCreateTransaction();
+
+  const categoryQuery = getUserCategories();
+  const categoryMutation = useCreateCategory();
+  const onCreateCategory = (name: string) =>
+    categoryMutation.mutate({
+      name,
+    });
+  const categoryOptions = (categoryQuery.data ?? []).map((category) => ({
+    label: category.name,
+    value: category.id,
+  }));
+
+  const accountQuery = getUserAccounts();
+  const accountMutation = useCreateAccount();
+  const onCreateAccount = (name: string) =>
+    accountMutation.mutate({
+      name,
+    });
+  const accountOptions = (accountQuery.data ?? []).map((account) => ({
+    label: account.name,
+    value: account.id,
+  }));
+
+  const isPending =
+    createMutation.isPending ||
+    categoryMutation.isPending ||
+    accountMutation.isPending;
+
+  const isLoading = categoryQuery.isLoading || accountQuery.isLoading;
+
   const onSubmit = (values: FormValues) => {
-    mutation.mutate(values, {
+    createMutation.mutate(values, {
       onSuccess: () => {
         onClose();
       },
@@ -33,18 +69,23 @@ export const NewTransactionSheet = () => {
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent className="space-y-4">
         <SheetHeader>
-          <SheetTitle>New Account</SheetTitle>
-          <SheetDescription>
-            Create a new account to track your new transactions.
-          </SheetDescription>
+          <SheetTitle>New Transaction</SheetTitle>
+          <SheetDescription>Add a new transaction</SheetDescription>
         </SheetHeader>
-        <AccountForm
-          onSubmit={onSubmit}
-          disabled={mutation.isPending}
-          defaultValues={{
-            name: "",
-          }}
-        />
+        {isLoading ? (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Loader2 className="size-4 text-muted-foreground animate-spin" />
+          </div>
+        ) : (
+          <TransactionForm
+            onSubmit={onSubmit}
+            disabled={isPending}
+            categoryOptions={categoryOptions}
+            onCreateCategory={onCreateCategory}
+            accountOptions={accountOptions}
+            onCreateAccount={onCreateAccount}
+          />
+        )}
       </SheetContent>
     </Sheet>
   );
