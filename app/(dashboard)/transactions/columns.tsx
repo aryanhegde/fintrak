@@ -9,6 +9,9 @@ import { client } from "@/lib/hono";
 import Actions from "./actions";
 import { formatDate } from "date-fns";
 import { formatCurrency } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { AccountColumn } from "./account-column";
+import { CategoryColumn } from "./category-column";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -73,8 +76,13 @@ export const columns: ColumnDef<ResponseType>[] = [
       );
     },
     cell: ({ row }) => {
-      const date = row.getValue("date") as Date;
-      return <span>{row.original.category}</span>;
+      return (
+        <CategoryColumn
+          id={row.original.id}
+          category={row.original.category}
+          categoryId={row.original.categoryId}
+        />
+      );
     },
   },
 
@@ -108,7 +116,37 @@ export const columns: ColumnDef<ResponseType>[] = [
     },
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
-      return <span>{formatCurrency(amount)}</span>;
+      return (
+        <Badge
+          variant={amount < 0 ? "destructive" : "primary"}
+          className="text-xs font-medium px-3.5 py-2.5"
+        >
+          {formatCurrency(amount)}
+        </Badge>
+      );
+    },
+  },
+
+  {
+    accessorKey: "account",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Account
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <AccountColumn
+          account={row.original.account}
+          accountId={row.original.accountId}
+        />
+      );
     },
   },
 
