@@ -1,19 +1,23 @@
 import { useOpenCategory } from "@/fearures/categories/hooks/use-open-category";
+import { useOpenTransaction } from "@/fearures/transactions/hooks/use-open-transaction";
 import { cn } from "@/lib/utils";
 import { TriangleAlert } from "lucide-react";
 
 type Props = {
-  id: string | null;
+  id: string;
   category: string | null;
   categoryId: string | null;
 };
 
-export const CategoryColumn = ({ category, categoryId }: Props) => {
+export const CategoryColumn = ({ id, category, categoryId }: Props) => {
   const { onOpen: onOpenCategory } = useOpenCategory();
+  const { onOpen: onOpenTransaction } = useOpenTransaction();
 
   const onClick = () => {
     if (categoryId) {
       onOpenCategory(categoryId);
+    } else {
+      onOpenTransaction(id);
     }
   };
 

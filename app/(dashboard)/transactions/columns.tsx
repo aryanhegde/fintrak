@@ -1,20 +1,19 @@
 "use client";
 
+import { format } from "date-fns";
 import { InferResponseType } from "hono";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
+import { ColumnDef } from "@tanstack/react-table";
+
 import { client } from "@/lib/hono";
-import Actions from "./actions";
-import { formatDate } from "date-fns";
 import { formatCurrency } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+
+import { Actions } from "./actions";
 import { AccountColumn } from "./account-column";
 import { CategoryColumn } from "./category-column";
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 
 export type ResponseType = InferResponseType<
   typeof client.api.transactions.$get,
@@ -59,7 +58,8 @@ export const columns: ColumnDef<ResponseType>[] = [
     },
     cell: ({ row }) => {
       const date = row.getValue("date") as Date;
-      return <span>{formatDate(date, "dd MMMM, yyyy")}</span>;
+
+      return <span>{format(date, "dd MMMM, yyyy")}</span>;
     },
   },
   {
@@ -85,7 +85,6 @@ export const columns: ColumnDef<ResponseType>[] = [
       );
     },
   },
-
   {
     accessorKey: "payee",
     header: ({ column }) => {
@@ -94,13 +93,12 @@ export const columns: ColumnDef<ResponseType>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          payee
+          Payee
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
-
   {
     accessorKey: "amount",
     header: ({ column }) => {
@@ -116,6 +114,7 @@ export const columns: ColumnDef<ResponseType>[] = [
     },
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
+
       return (
         <Badge
           variant={amount < 0 ? "destructive" : "primary"}
@@ -126,7 +125,6 @@ export const columns: ColumnDef<ResponseType>[] = [
       );
     },
   },
-
   {
     accessorKey: "account",
     header: ({ column }) => {
@@ -149,7 +147,6 @@ export const columns: ColumnDef<ResponseType>[] = [
       );
     },
   },
-
   {
     id: "actions",
     cell: ({ row }) => <Actions id={row.original.id} />,

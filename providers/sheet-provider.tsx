@@ -7,6 +7,7 @@ import { NewCategorySheet } from "@/fearures/categories/components/new-category-
 import { EditCategorySheet } from "@/fearures/categories/components/edit-category-sheet";
 import { NewTransactionSheet } from "@/fearures/transactions/components/new-transaction-sheet";
 import { NewAccountSheet } from "@/fearures/accounts/components/new-account-sheet";
+import { EditTransactionSheet } from "@/fearures/transactions/components/edit-transaction-sheet";
 
 export const SheetProvider = () => {
   const isMounted = useMountedState();
@@ -20,6 +21,7 @@ export const SheetProvider = () => {
       <NewCategorySheet />
       <EditCategorySheet />
       <NewTransactionSheet />
+      <EditTransactionSheet />
     </>
   );
 };
