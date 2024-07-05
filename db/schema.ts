@@ -31,7 +31,7 @@ export const transactions = pgTable("transactions", {
   payee: text("payee").notNull(),
   notes: text("notes"),
   date: timestamp("date", { mode: "date" }).notNull(),
-  accountTd: text("account_id")
+  accountId: text("account_id")
     .references(() => accounts.id, {
       onDelete: "cascade",
     })
@@ -43,7 +43,7 @@ export const transactions = pgTable("transactions", {
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({
   transactions: one(accounts, {
-    fields: [transactions.accountTd],
+    fields: [transactions.accountId],
     references: [accounts.id],
   }),
 }));

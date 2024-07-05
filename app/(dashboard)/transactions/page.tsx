@@ -6,22 +6,22 @@ import { Loader2, PlusIcon } from "lucide-react";
 
 import { DataTable } from "@/components/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useBulkDeleteAccounts } from "@/fearures/accounts/api/use-bulk-delete-accounts";
-import { getUserAccounts } from "@/fearures/accounts/api/use-get-acounts";
+import { useBulkDeleteTransactions } from "@/fearures/transactions/api/use-bulk-delete-transactions";
+import { getUserTransactions } from "@/fearures/transactions/api/use-get-transactions";
 import { useNewTransaction } from "@/fearures/transactions/hooks/use-new-transaction";
 import { columns } from "./columns";
 
 const TransactionsPage = () => {
   const newTransaction = useNewTransaction();
-  const deleteAccounts = useBulkDeleteAccounts();
+  const deleteTransactions = useBulkDeleteTransactions();
 
-  const accountsQuery = getUserAccounts();
+  const transactionsQuery = getUserTransactions();
 
-  const accounts = accountsQuery.data || [];
+  const transactions = transactionsQuery.data || [];
 
   const isDisabled = false;
 
-  if (accountsQuery.isLoading) {
+  if (transactionsQuery.isLoading) {
     return (
       <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
         <Card className="border-none drop-shadow-sm">
@@ -53,11 +53,11 @@ const TransactionsPage = () => {
         <CardContent>
           <DataTable
             columns={columns}
-            data={accounts}
+            data={transactions}
             filterKey="name"
             onDelete={(row) => {
               const ids = row.map((r) => r.original.id);
-              deleteAccounts.mutate({ ids });
+              deleteTransactions.mutate({ ids });
             }}
             disabled={isDisabled}
           />

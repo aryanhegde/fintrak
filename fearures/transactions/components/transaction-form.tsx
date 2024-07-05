@@ -71,7 +71,7 @@ export const TransactionForm = ({
     console.log("values: ", values);
     onSubmit({
       ...values,
-      amount: amountInMiliunits, 
+      amount: amountInMiliunits,
     });
   };
 

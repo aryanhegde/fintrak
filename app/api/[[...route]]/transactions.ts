@@ -53,14 +53,14 @@ const app = new Hono()
           amount: transactions.amount,
           notes: transactions.notes,
           account: accounts.name,
-          accountId: transactions.accountTd,
+          accountId: transactions.accountId,
         })
         .from(transactions)
-        .innerJoin(accounts, eq(transactions.accountTd, accounts.id))
+        .innerJoin(accounts, eq(transactions.accountId, accounts.id))
         .leftJoin(categories, eq(transactions.categoryId, categories.id))
         .where(
           and(
-            accountId ? eq(transactions.accountTd, accountId) : undefined,
+            accountId ? eq(transactions.accountId, accountId) : undefined,
             eq(accounts.userId, auth.userId),
             gte(transactions.date, startDate),
             lte(transactions.date, endDate)
@@ -100,10 +100,10 @@ const app = new Hono()
           payee: transactions.payee,
           amount: transactions.amount,
           notes: transactions.notes,
-          accountId: transactions.accountTd,
+          accountId: transactions.accountId,
         })
         .from(transactions)
-        .innerJoin(accounts, eq(transactions.accountTd, accounts.id))
+        .innerJoin(accounts, eq(transactions.accountId, accounts.id))
         .where(and(eq(transactions.id, id), eq(accounts.userId, auth.userId)));
 
       if (!data) {
@@ -195,7 +195,7 @@ const app = new Hono()
         db
           .select({ id: transactions.id })
           .from(transactions)
-          .innerJoin(accounts, eq(transactions.accountTd, accounts.id))
+          .innerJoin(accounts, eq(transactions.accountId, accounts.id))
           .where(
             and(
               inArray(transactions.id, values.ids),
@@ -252,7 +252,7 @@ const app = new Hono()
         db
           .select({ id: transactions.id })
           .from(transactions)
-          .innerJoin(accounts, eq(transactions.accountTd, accounts.id))
+          .innerJoin(accounts, eq(transactions.accountId, accounts.id))
           .where(and(eq(transactions.id, id), eq(accounts.userId, auth.userId)))
       );
 
@@ -299,7 +299,7 @@ const app = new Hono()
         db
           .select({ id: transactions.id })
           .from(transactions)
-          .innerJoin(accounts, eq(transactions.accountTd, accounts.id))
+          .innerJoin(accounts, eq(transactions.accountId, accounts.id))
           .where(and(eq(transactions.id, id), eq(accounts.userId, auth.userId)))
       );
 
