@@ -31,7 +31,7 @@ export const CategoryColumn = ({ id, category, categoryId }: Props) => {
           className={cn("mr-2 size-4 shrink-0", !category && "text-rose-500")}
         />
       )}
-      {category || "Uncategorized"}
+      {category || <p className="text-rose-500">Uncategorized</p>}
     </div>
   );
 };
