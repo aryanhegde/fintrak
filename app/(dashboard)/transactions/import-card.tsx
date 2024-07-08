@@ -7,7 +7,7 @@ import { boolean } from "drizzle-orm/mysql-core";
 import { convertAmountToMiliunits } from "@/lib/utils";
 import { format, parse } from "date-fns";
 
-const dateFormat = "dd-MM-yyyy HH:mm";
+const dateFormat = "yyyy-MM-dd HH:mm";
 const outputFormat = "yyyy-MM-dd";
 
 const requiredOptions = ["amount", "date", "payee"];
