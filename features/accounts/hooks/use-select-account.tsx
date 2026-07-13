@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useRef, useState } from "react";
+import { useRef, useState, type JSX } from "react";
 import { getUserAccounts } from "../api/use-get-acounts";
 import { useCreateAccount } from "../api/use-create-account";
 import { Select } from "@/components/select";
@@ -31,7 +31,7 @@ export const useSelectAccount = (): [
     resolve: (value: string | undefined) => void;
   } | null>(null);
 
-  const selectValue = useRef<string>();
+  const selectValue = useRef<string | undefined>(undefined);
 
   const confirm = () =>
     new Promise((resolve, reject) => {
