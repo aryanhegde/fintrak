@@ -13,9 +13,9 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@clerk/backend": "^1.1.5",
-    "@clerk/nextjs": "^5.0.8",
-    "@hono/clerk-auth": "^2.0.0",
+    "@clerk/backend": "^3.11.4",
+    "@clerk/nextjs": "^7.5.17",
+    "@hono/clerk-auth": "^3.1.1",
     "@hono/zod-validator": "^0.2.2",
     "@hookform/resolvers": "^3.4.2",
     "@neondatabase/serverless": "^0.9.3",
