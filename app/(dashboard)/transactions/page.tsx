@@ -8,16 +8,16 @@ import { transactions as transactionSchema } from "@/db/schema";
 
 import { DataTable } from "@/components/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useBulkDeleteTransactions } from "@/fearures/transactions/api/use-bulk-delete-transactions";
-import { getUserTransactions } from "@/fearures/transactions/api/use-get-transactions";
-import { useNewTransaction } from "@/fearures/transactions/hooks/use-new-transaction";
+import { useBulkDeleteTransactions } from "@/features/transactions/api/use-bulk-delete-transactions";
+import { getUserTransactions } from "@/features/transactions/api/use-get-transactions";
+import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction";
 import { columns } from "./columns";
 import { useState } from "react";
 import { UploadButton } from "./upload-button";
 import ImportCard from "./import-card";
-import { useSelectAccount } from "@/fearures/accounts/hooks/use-select-account";
+import { useSelectAccount } from "@/features/accounts/hooks/use-select-account";
 import { toast } from "sonner";
-import { useBulkCreateTransactions } from "@/fearures/transactions/api/use-bulk-create-transactions";
+import { useBulkCreateTransactions } from "@/features/transactions/api/use-bulk-create-transactions";
 
 enum VARIANTS {
   LIST = "LIST",

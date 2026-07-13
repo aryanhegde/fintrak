@@ -1,6 +1,6 @@
 "use client";
 
-import { getUserSummary } from "@/fearures/summary/api/use-get-summary";
+import { getUserSummary } from "@/features/summary/api/use-get-summary";
 import { formatDateRange } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 

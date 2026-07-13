@@ -15,10 +15,10 @@ import { useEditTransaction } from "../api/use-edit-transaction";
 import { getUserTransaction } from "../api/use-get-transaction";
 import { useOpenTransaction } from "../hooks/use-open-transaction";
 import { TransactionForm } from "./transaction-form";
-import { getUserCategories } from "@/fearures/categories/api/use-get-categories";
-import { useCreateCategory } from "@/fearures/categories/api/use-create-category";
-import { getUserAccounts } from "@/fearures/accounts/api/use-get-acounts";
-import { useCreateAccount } from "@/fearures/accounts/api/use-create-account";
+import { getUserCategories } from "@/features/categories/api/use-get-categories";
+import { useCreateCategory } from "@/features/categories/api/use-create-category";
+import { getUserAccounts } from "@/features/accounts/api/use-get-acounts";
+import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 
 const formSchema = insertTransactionSchema.omit({
   id: true,

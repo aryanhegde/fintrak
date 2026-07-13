@@ -8,9 +8,9 @@ import { Loader2, PlusIcon } from "lucide-react";
 import { columns } from "./columns";
 import { DataTable } from "@/components/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useNewCategory } from "@/fearures/categories/hooks/use-new-category";
-import { useBulkDeleteCategories } from "@/fearures/categories/api/use-bulk-delete-categories";
-import { getUserCategories } from "@/fearures/categories/api/use-get-categories";
+import { useNewCategory } from "@/features/categories/hooks/use-new-category";
+import { useBulkDeleteCategories } from "@/features/categories/api/use-bulk-delete-categories";
+import { getUserCategories } from "@/features/categories/api/use-get-categories";
 
 const CategoriesPage = () => {
   const newCategory = useNewCategory();

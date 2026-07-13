@@ -1,6 +1,6 @@
 "use client";
 
-import { getUserAccounts } from "@/fearures/accounts/api/use-get-acounts";
+import { getUserAccounts } from "@/features/accounts/api/use-get-acounts";
 
 import qs from "query-string";
 
@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { getUserSummary } from "@/fearures/summary/api/use-get-summary";
+import { getUserSummary } from "@/features/summary/api/use-get-summary";
 
 export const AccountFilter = () => {
   const router = useRouter();

@@ -10,10 +10,10 @@ import { insertTransactionSchema } from "@/db/schema";
 import { z } from "zod";
 import { useCreateTransaction } from "../api/use-create-transaction";
 import { useNewTransaction } from "../hooks/use-new-transaction";
-import { useCreateCategory } from "@/fearures/categories/api/use-create-category";
-import { getUserCategories } from "@/fearures/categories/api/use-get-categories";
-import { getUserAccounts } from "@/fearures/accounts/api/use-get-acounts";
-import { useCreateAccount } from "@/fearures/accounts/api/use-create-account";
+import { useCreateCategory } from "@/features/categories/api/use-create-category";
+import { getUserCategories } from "@/features/categories/api/use-get-categories";
+import { getUserAccounts } from "@/features/accounts/api/use-get-acounts";
+import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 import { TransactionForm } from "./transaction-form";
 import { Loader2 } from "lucide-react";
 

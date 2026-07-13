@@ -2,12 +2,12 @@
 
 import { useMountedState } from "react-use";
 
-import { EditAccountSheet } from "@/fearures/accounts/components/edit-account-sheet";
-import { NewCategorySheet } from "@/fearures/categories/components/new-category-sheet";
-import { EditCategorySheet } from "@/fearures/categories/components/edit-category-sheet";
-import { NewTransactionSheet } from "@/fearures/transactions/components/new-transaction-sheet";
-import { NewAccountSheet } from "@/fearures/accounts/components/new-account-sheet";
-import { EditTransactionSheet } from "@/fearures/transactions/components/edit-transaction-sheet";
+import { EditAccountSheet } from "@/features/accounts/components/edit-account-sheet";
+import { NewCategorySheet } from "@/features/categories/components/new-category-sheet";
+import { EditCategorySheet } from "@/features/categories/components/edit-category-sheet";
+import { NewTransactionSheet } from "@/features/transactions/components/new-transaction-sheet";
+import { NewAccountSheet } from "@/features/accounts/components/new-account-sheet";
+import { EditTransactionSheet } from "@/features/transactions/components/edit-transaction-sheet";
 
 export const SheetProvider = () => {
   const isMounted = useMountedState();
