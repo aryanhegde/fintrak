@@ -85,3 +85,34 @@ export function detectRecurring(txns: RecurringInput[]): RecurringPayment[] {
 
   return results.sort((a, b) => a.nextDate.localeCompare(b.nextDate));
 }
+
+export function computeHealthScore(income: number, remaining: number): number {
+  if (income <= 0) return 0;
+  return Math.min(100, Math.max(0, Math.round((remaining / income) * 100)));
+}
+
+const trendBullet = (label: string, change: number) => {
+  const pct = Math.abs(Math.round(change));
+  if (pct === 0) return `${label} is flat vs last period`;
+  return `${label} is ${change > 0 ? "up" : "down"} ${pct}% vs last period`;
+};
+
+export function buildInsights(params: {
+  incomeChange: number;
+  expensesChange: number;
+  topCategoryName?: string;
+  topCategoryShare?: number;
+}): string[] {
+  const bullets = [
+    trendBullet("Income", params.incomeChange),
+    trendBullet("Spending", params.expensesChange),
+  ];
+  if (params.topCategoryName && params.topCategoryShare !== undefined) {
+    bullets.push(
+      `${params.topCategoryName} makes up ${Math.round(
+        params.topCategoryShare
+      )}% of your spending`
+    );
+  }
+  return bullets;
+}

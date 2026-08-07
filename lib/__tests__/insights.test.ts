@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { detectRecurring } from "../insights";
+import { buildInsights, computeHealthScore, detectRecurring } from "../insights";
 
 const d = (s: string) => new Date(`${s}T00:00:00`);
 
@@ -75,5 +75,43 @@ describe("detectRecurring", () => {
       { payee: "A-Sub", amount: -1000, date: d("2026-07-05") },
     ]);
     expect(result.map((r) => r.payee)).toEqual(["A-Sub", "B-Sub"]);
+  });
+});
+
+describe("computeHealthScore", () => {
+  it("returns the savings rate as a rounded percentage", () => {
+    expect(computeHealthScore(100000, 72000)).toBe(72);
+  });
+  it("returns 0 when income is 0", () => {
+    expect(computeHealthScore(0, 0)).toBe(0);
+  });
+  it("clamps to 0 when spending exceeds income", () => {
+    expect(computeHealthScore(100000, -20000)).toBe(0);
+  });
+  it("clamps to 100 maximum", () => {
+    expect(computeHealthScore(100000, 150000)).toBe(100);
+  });
+});
+
+describe("buildInsights", () => {
+  it("mentions income trend, expense trend, and top category", () => {
+    const bullets = buildInsights({
+      incomeChange: 12.4,
+      expensesChange: -8.2,
+      topCategoryName: "Food",
+      topCategoryShare: 38.5,
+    });
+    expect(bullets).toHaveLength(3);
+    expect(bullets[0]).toBe("Income is up 12% vs last period");
+    expect(bullets[1]).toBe("Spending is down 8% vs last period");
+    expect(bullets[2]).toBe("Food makes up 39% of your spending");
+  });
+
+  it("omits the category bullet when there is no top category", () => {
+    const bullets = buildInsights({ incomeChange: 0, expensesChange: 0 });
+    expect(bullets).toEqual([
+      "Income is flat vs last period",
+      "Spending is flat vs last period",
+    ]);
   });
 });
