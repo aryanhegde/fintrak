@@ -1,3 +1,5 @@
+import { Landmark } from "lucide-react";
+
 import { useOpenAccount } from "@/features/accounts/hooks/use-open-account";
 
 type Props = {
@@ -13,11 +15,13 @@ export const AccountColumn = ({ account, accountId }: Props) => {
   };
 
   return (
-    <div
-      className="flex items-center cursor-pointer hover:underline"
+    <button
+      type="button"
       onClick={onClick}
+      className="inline-flex items-center gap-x-1.5 text-sm text-slate-500 transition-colors hover:text-blue-600"
     >
-      {account}
-    </div>
+      <Landmark className="size-3.5 shrink-0" />
+      <span className="truncate">{account}</span>
+    </button>
   );
 };
