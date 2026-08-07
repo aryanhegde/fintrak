@@ -62,7 +62,11 @@ const app = new Hono().get(
             lte(transactions.date, end)
           )
         );
-      return row;
+      return {
+        income: row.income ?? 0,
+        expenses: row.expenses ?? 0,
+        remaining: row.remaining ?? 0,
+      };
     }
 
     const [currentPeriod, lastPeriod] = await Promise.all([

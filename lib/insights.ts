@@ -32,7 +32,7 @@ export function detectRecurring(txns: RecurringInput[]): RecurringPayment[] {
 
   const results: RecurringPayment[] = [];
 
-  for (const [key, group] of groups) {
+  for (const group of groups.values()) {
     const sorted = [...group].sort(
       (a, b) => a.date.getTime() - b.date.getTime()
     );
@@ -92,6 +92,7 @@ export function computeHealthScore(income: number, remaining: number): number {
 }
 
 const trendBullet = (label: string, change: number) => {
+  if (!Number.isFinite(change)) return `${label} is flat vs last period`;
   const pct = Math.abs(Math.round(change));
   if (pct === 0) return `${label} is flat vs last period`;
   return `${label} is ${change > 0 ? "up" : "down"} ${pct}% vs last period`;

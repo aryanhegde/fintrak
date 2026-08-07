@@ -114,4 +114,15 @@ describe("buildInsights", () => {
       "Spending is flat vs last period",
     ]);
   });
+
+  it("treats non-finite changes (Infinity/NaN from empty periods) as flat", () => {
+    const bullets = buildInsights({
+      incomeChange: Infinity,
+      expensesChange: NaN,
+    });
+    expect(bullets).toEqual([
+      "Income is flat vs last period",
+      "Spending is flat vs last period",
+    ]);
+  });
 });
