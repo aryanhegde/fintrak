@@ -180,7 +180,7 @@ export function TransactionsTable<TData, TValue>({
                     <TableHead
                       key={header.id}
                       className={cn(
-                        "h-11 px-4 first:pl-5 last:pr-5",
+                        "h-11 px-3 first:pl-4 last:pr-4 sm:px-4 sm:first:pl-5 sm:last:pr-5",
                         header.column.columnDef.meta?.headerClassName
                       )}
                     >
@@ -206,7 +206,7 @@ export function TransactionsTable<TData, TValue>({
                     <TableCell
                       key={cell.id}
                       className={cn(
-                        "px-4 py-3 first:pl-5 last:pr-5",
+                        "px-3 py-3 first:pl-4 last:pr-4 sm:px-4 sm:first:pl-5 sm:last:pr-5",
                         cell.column.columnDef.meta?.cellClassName
                       )}
                     >

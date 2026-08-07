@@ -135,6 +135,10 @@ export const columns: ColumnDef<ResponseType>[] = [
         </span>
       );
     },
+    meta: {
+      headerClassName: "hidden sm:table-cell",
+      cellClassName: "hidden sm:table-cell",
+    },
   },
   {
     accessorKey: "account",
