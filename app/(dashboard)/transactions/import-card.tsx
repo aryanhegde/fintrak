@@ -132,7 +132,7 @@ const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
             <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
               Match columns
             </span>
-            {requiredOptions.map((option) => {
+            {["date", "payee", "amount"].map((option) => {
               const isMapped = Object.values(selectedColumns).includes(option);
 
               return (

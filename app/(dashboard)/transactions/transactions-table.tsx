@@ -179,6 +179,7 @@ export function TransactionsTable<TData, TValue>({
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
+                      aria-sort={header.column.getIsSorted() === "asc" ? "ascending" : header.column.getIsSorted() === "desc" ? "descending" : undefined}
                       className={cn(
                         "h-11 px-3 first:pl-4 last:pr-4 sm:px-4 sm:first:pl-5 sm:last:pr-5",
                         header.column.columnDef.meta?.headerClassName

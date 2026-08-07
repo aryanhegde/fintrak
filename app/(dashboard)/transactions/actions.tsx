@@ -47,7 +47,7 @@ export const Actions = ({ id }: Props) => {
             <MoreHorizontal className="size-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-40 rounded-xl">
+        <DropdownMenuContent align="end" className="w-40 rounded-xl shadow-lg">
           <DropdownMenuItem
             disabled={deleteMutation.isPending}
             onClick={() => onOpen(id)}

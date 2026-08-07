@@ -94,6 +94,7 @@ export const columns: ColumnDef<ResponseType>[] = [
       return (
         <div className="flex min-w-0 items-center gap-x-3">
           <span
+            aria-hidden="true"
             className={cn(
               "flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
               monogramStyle(payee)
