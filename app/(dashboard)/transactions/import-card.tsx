@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 import ImportTable from "./import-table";
-import { SelectContent } from "@radix-ui/react-select";
-import { boolean } from "drizzle-orm/mysql-core";
-import { convertAmountToMiliunits } from "@/lib/utils";
+import { CheckCircle2, Circle } from "lucide-react";
+import { cn, convertAmountToMiliunits } from "@/lib/utils";
 import { format, parse } from "date-fns";
 
 const dateFormat = "yyyy-MM-dd HH:mm";
@@ -98,36 +96,75 @@ const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
   };
 
   return (
-    <div className="max-w-screen-2xl mx-auto w-full py-8 pb-10">
-      <Card className="border-none drop-shadow-sm">
-        <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
-          <CardTitle className="text-xl line-clamp-1">
-            Import Transaction
-          </CardTitle>
-
-          <div className="flex flex-col lg:flex-row gap-y-2  items-center gap-2">
-            <Button size="sm" onClick={onCancel} className="w-full lg:w-auto">
+    <div className="mx-auto w-full max-w-screen-2xl py-8 pb-10">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-y-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              Import transactions
+            </h1>
+            <p className="mt-1 text-sm text-slate-500">
+              Map your CSV columns — date, payee and amount are required.
+            </p>
+          </div>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={onCancel}
+              className="h-9 w-full rounded-lg border-slate-200 bg-white text-slate-700 hover:bg-slate-50 sm:w-auto"
+            >
               Cancel
             </Button>
             <Button
               size="sm"
               onClick={handleContinue}
               disabled={progress < requiredOptions.length}
-              className="w-full lg:w-auto"
+              className="h-9 w-full rounded-lg bg-blue-600 text-white shadow-sm hover:bg-blue-700 sm:w-auto"
             >
-              Continue ({progress} / {requiredOptions.length})
+              Continue
             </Button>
           </div>
-        </CardHeader>
-        <CardContent>
-          <ImportTable
-            headers={headers}
-            body={body}
-            selectedColumns={selectedColumns}
-            onTableHeadSelectChange={onTableHeadSelectChange}
-          />
-        </CardContent>
-      </Card>
+        </div>
+
+        <div className="overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm">
+          <div className="flex flex-wrap items-center gap-3 border-b border-slate-100 px-5 py-4">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+              Match columns
+            </span>
+            {requiredOptions.map((option) => {
+              const isMapped = Object.values(selectedColumns).includes(option);
+
+              return (
+                <span
+                  key={option}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium capitalize",
+                    isMapped
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-slate-100 text-slate-500"
+                  )}
+                >
+                  {isMapped ? (
+                    <CheckCircle2 className="size-3.5" />
+                  ) : (
+                    <Circle className="size-3.5" />
+                  )}
+                  {option}
+                </span>
+              );
+            })}
+          </div>
+          <div className="p-5">
+            <ImportTable
+              headers={headers}
+              body={body}
+              selectedColumns={selectedColumns}
+              onTableHeadSelectChange={onTableHeadSelectChange}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

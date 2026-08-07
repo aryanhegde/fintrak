@@ -23,12 +23,12 @@ const ImportTable = ({
   selectedColumns,
 }: Props) => {
   return (
-    <div className="rounded-md border overflow-hidden">
+    <div className="rounded-xl border border-slate-200 overflow-hidden">
       <Table>
-        <TableHeader className="bg-muted">
+        <TableHeader className="bg-slate-50/50">
           <TableRow>
             {headers.map((_item, index) => (
-              <TableHead key={index}>
+              <TableHead key={index} className="h-12 px-2">
                 <TableHeadSelect
                   columnIndex={index}
                   selectedColumns={selectedColumns}
@@ -40,9 +40,17 @@ const ImportTable = ({
         </TableHeader>
         <TableBody>
           {body.map((row: string[], index) => (
-            <TableRow key={index}>
+            <TableRow
+              key={index}
+              className="border-b border-slate-100 last:border-0 hover:bg-slate-50/60"
+            >
               {row.map((cell, index) => (
-                <TableCell key={index}>{cell} </TableCell>
+                <TableCell
+                  key={index}
+                  className="px-4 py-2.5 text-sm text-slate-600 whitespace-nowrap"
+                >
+                  {cell}
+                </TableCell>
               ))}
             </TableRow>
           ))}
