@@ -10,10 +10,10 @@ type Props = {
 
 const DashboardLayout = ({ children }: Props) => {
   return (
-    <>
+    <div className="min-h-screen bg-slate-50">
       <Header />
       <main className="px-3 lg:px-14">{children}</main>
-    </>
+    </div>
   );
 };
 
