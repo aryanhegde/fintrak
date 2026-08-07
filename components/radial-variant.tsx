@@ -7,7 +7,7 @@ import {
 
 import { formatCurrency } from "@/lib/utils";
 
-const COLORS = ["#0062FF", "#12C6FF", "#FF647F", "#FF9354"];
+const COLORS = ["#2563eb", "#60a5fa", "#93c5fd", "#cbd5e1", "#e2e8f0"];
 
 type Props = {
   data: {

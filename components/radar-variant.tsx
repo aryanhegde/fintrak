@@ -23,8 +23,8 @@ export const RadarVariant = ({ data }: Props) => {
         <PolarRadiusAxis style={{ fontSize: "12px" }} />
         <Radar
           dataKey="value"
-          stroke="#3bd2f6"
-          fill="#3bd2f6"
+          stroke="#2563eb"
+          fill="#2563eb"
           fillOpacity={0.6}
         />
       </RadarChart>
