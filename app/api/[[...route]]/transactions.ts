@@ -14,6 +14,7 @@ import { and, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { parse, subDays } from "date-fns";
+import { ensureDefaultAccount } from "@/lib/default-account";
 
 const app = new Hono()
   .get(
@@ -118,9 +119,14 @@ const app = new Hono()
     clerkMiddleware(),
     zValidator(
       "json",
-      insertTransactionSchema.omit({
-        id: true,
-      })
+      insertTransactionSchema
+        .omit({
+          id: true,
+          accountId: true,
+        })
+        .extend({
+          accountId: z.string().optional(),
+        })
     ),
     async (c) => {
       const auth = getAuth(c);
@@ -130,11 +136,25 @@ const app = new Hono()
         return c.json({ error: "Unauthorized" }, 401);
       }
 
+      let accountId = values.accountId;
+      if (accountId) {
+        const [owned] = await db
+          .select({ id: accounts.id })
+          .from(accounts)
+          .where(and(eq(accounts.id, accountId), eq(accounts.userId, auth.userId)));
+        if (!owned) {
+          return c.json({ error: "Account not found" }, 403);
+        }
+      } else {
+        accountId = (await ensureDefaultAccount(auth.userId)).id;
+      }
+
       const [data] = await db
         .insert(transactions)
         .values({
           id: createId(),
           ...values,
+          accountId,
         })
         .returning();
 
