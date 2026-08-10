@@ -36,6 +36,14 @@ export const getUserSummary = () => {
           ...category,
           value: convertAmountFromMiliunits(category.value),
         })),
+        allCategories: data.allCategories.map((category) => ({
+          ...category,
+          value: convertAmountFromMiliunits(category.value),
+        })),
+        previousCategories: data.previousCategories.map((category) => ({
+          ...category,
+          value: convertAmountFromMiliunits(category.value),
+        })),
         days: data.days.map((day) => ({
           ...day,
           income: convertAmountFromMiliunits(day.income),

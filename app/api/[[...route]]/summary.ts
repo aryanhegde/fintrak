@@ -69,6 +69,32 @@ const app = new Hono().get(
         );
     }
 
+    async function fetchSpendingByCategory(
+      userId: string,
+      startDate: Date,
+      endDate: Date
+    ) {
+      return await db
+        .select({
+          name: categories.name,
+          value: sql`SUM(ABS(${transactions.amount}))`.mapWith(Number),
+        })
+        .from(transactions)
+        .innerJoin(accounts, eq(transactions.accountId, accounts.id))
+        .innerJoin(categories, eq(transactions.categoryId, categories.id))
+        .where(
+          and(
+            accountId ? eq(transactions.accountId, accountId) : undefined,
+            eq(accounts.userId, userId),
+            lt(transactions.amount, 0),
+            gte(transactions.date, startDate),
+            lte(transactions.date, endDate)
+          )
+        )
+        .groupBy(categories.name)
+        .orderBy(desc(sql`SUM(ABS(${transactions.amount}))`));
+    }
+
     const [currentPeriod] = await fetchFinancialData(
       auth.userId,
       startDate,
@@ -93,25 +119,12 @@ const app = new Hono().get(
       lastPeriod.remaining
     );
 
-    const category = await db
-      .select({
-        name: categories.name,
-        value: sql`SUM(ABS(${transactions.amount}))`.mapWith(Number),
-      })
-      .from(transactions)
-      .innerJoin(accounts, eq(transactions.accountId, accounts.id))
-      .innerJoin(categories, eq(transactions.categoryId, categories.id))
-      .where(
-        and(
-          accountId ? eq(transactions.accountId, accountId) : undefined,
-          eq(accounts.userId, auth.userId),
-          lt(transactions.amount, 0),
-          gte(transactions.date, startDate),
-          lte(transactions.date, endDate)
-        )
-      )
-      .groupBy(categories.name)
-      .orderBy(desc(sql`SUM(ABS(${transactions.amount}))`));
+    const category = await fetchSpendingByCategory(auth.userId, startDate, endDate);
+    const previousCategories = await fetchSpendingByCategory(
+      auth.userId,
+      lastPeriodStart,
+      lastPeriodEnd
+    );
 
     const topCategories = category.slice(0, 3);
     const otherCategories = category.slice(3);
@@ -164,6 +177,8 @@ const app = new Hono().get(
         expensesAmount: currentPeriod.expenses,
         expensesChange,
         categories: finalCategories,
+        allCategories: category,
+        previousCategories,
         days,
       },
     });
