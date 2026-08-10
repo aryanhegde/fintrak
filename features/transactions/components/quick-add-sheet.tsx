@@ -107,6 +107,7 @@ export const QuickAddSheet = () => {
                 <button
                   key={category.id}
                   type="button"
+                  aria-pressed={categoryId === category.id}
                   onClick={() => setCategoryId(category.id)}
                   className={cn(
                     "rounded-full border px-4 py-2 text-sm font-medium transition",
@@ -134,11 +135,12 @@ export const QuickAddSheet = () => {
               <button
                 key={option}
                 type="button"
+                aria-pressed={day === option}
                 onClick={() => setDay(option)}
                 className={cn(
-                  "rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wider transition",
+                  "rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wider transition",
                   day === option
-                    ? "border-slate-900 bg-slate-900 text-white"
+                    ? "border-blue-600 bg-blue-600 text-white"
                     : "border-slate-200 text-slate-400"
                 )}
               >
