@@ -8,6 +8,7 @@ import { and, desc, eq, gte, lt, lte, sql, sum } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { accounts, categories, transactions } from "@/db/schema";
 import { calculatePercentageChange, fillMissingDays } from "@/lib/utils";
+import { previousRange } from "@/lib/month";
 
 const app = new Hono().get(
   "/",
@@ -120,10 +121,11 @@ const app = new Hono().get(
     );
 
     const category = await fetchSpendingByCategory(auth.userId, startDate, endDate);
+    const prevRange = previousRange(startDate, endDate);
     const previousCategories = await fetchSpendingByCategory(
       auth.userId,
-      lastPeriodStart,
-      lastPeriodEnd
+      prevRange.start,
+      prevRange.end
     );
 
     const topCategories = category.slice(0, 3);

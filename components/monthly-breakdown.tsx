@@ -1,7 +1,10 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+
 import { getUserSummary } from "@/features/summary/api/use-get-summary";
 import { formatCurrency } from "@/lib/utils";
+import { monthLabel } from "@/lib/month";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type CategoryTotal = { name: string; value: number };
@@ -29,6 +32,9 @@ export function buildBreakdownRows(
 
 export const MonthlyBreakdown = () => {
   const { data, isLoading } = getUserSummary();
+  const params = useSearchParams();
+  const from = params.get("from");
+  const heading = from ? `Spent in ${monthLabel(from.slice(0, 7))}` : "Spent this month";
 
   if (isLoading) {
     return <Skeleton className="h-64 w-full rounded-2xl" />;
@@ -44,7 +50,7 @@ export const MonthlyBreakdown = () => {
     <div className="rounded-2xl border border-slate-200/60 bg-white shadow-sm">
       <div className="border-b border-slate-100 px-6 py-5">
         <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-          Spent this month
+          {heading}
         </p>
         <p className="pt-1 text-3xl font-semibold tabular-nums text-slate-900">
           {formatCurrency(totalSpent)}

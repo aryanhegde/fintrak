@@ -5,6 +5,7 @@ import {
   monthRange,
   nextMonth,
   prevMonth,
+  previousRange,
 } from "@/lib/month";
 
 describe("monthRange", () => {
@@ -45,5 +46,31 @@ describe("monthLabel", () => {
 describe("currentMonth", () => {
   it("formats the given date as yyyy-MM", () => {
     expect(currentMonth(new Date("2026-08-10"))).toBe("2026-08");
+  });
+});
+
+describe("previousRange", () => {
+  it("returns the previous full calendar month for a calendar month range", () => {
+    const result = previousRange(new Date(2026, 8, 1), new Date(2026, 8, 30));
+    expect(result.start).toEqual(new Date(2026, 7, 1));
+    expect(result.end).toEqual(new Date(2026, 7, 31, 23, 59, 59, 999));
+  });
+
+  it("handles a shorter previous month", () => {
+    const result = previousRange(new Date(2026, 2, 1), new Date(2026, 2, 31));
+    expect(result.start).toEqual(new Date(2026, 1, 1));
+    expect(result.end).toEqual(new Date(2026, 1, 28, 23, 59, 59, 999));
+  });
+
+  it("handles a year rollover", () => {
+    const result = previousRange(new Date(2026, 0, 1), new Date(2026, 0, 31));
+    expect(result.start).toEqual(new Date(2025, 11, 1));
+    expect(result.end).toEqual(new Date(2025, 11, 31, 23, 59, 59, 999));
+  });
+
+  it("keeps shifted-window behavior for an arbitrary non-calendar-month range", () => {
+    const result = previousRange(new Date(2026, 7, 5), new Date(2026, 7, 11));
+    expect(result.start).toEqual(new Date(2026, 6, 29));
+    expect(result.end).toEqual(new Date(2026, 7, 4));
   });
 });

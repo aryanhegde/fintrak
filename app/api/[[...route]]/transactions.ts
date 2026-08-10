@@ -181,6 +181,20 @@ const app = new Hono()
         return c.json({ error: "Unauthorized" }, 401);
       }
 
+      const accountIds = [...new Set(values.map((value) => value.accountId))];
+      const ownedAccounts = await db
+        .select({ id: accounts.id })
+        .from(accounts)
+        .where(
+          and(
+            inArray(accounts.id, accountIds),
+            eq(accounts.userId, auth.userId)
+          )
+        );
+      if (ownedAccounts.length !== accountIds.length) {
+        return c.json({ error: "Account not found" }, 403);
+      }
+
       const data = await db
         .insert(transactions)
         .values(
@@ -266,6 +280,16 @@ const app = new Hono()
 
       if (!auth?.userId) {
         return c.json({ error: "Unsuthorized" }, 401);
+      }
+
+      const [ownedAccount] = await db
+        .select({ id: accounts.id })
+        .from(accounts)
+        .where(
+          and(eq(accounts.id, values.accountId), eq(accounts.userId, auth.userId))
+        );
+      if (!ownedAccount) {
+        return c.json({ error: "Account not found" }, 403);
       }
 
       const transactionsToUpdate = db.$with("transactions_to_update").as(

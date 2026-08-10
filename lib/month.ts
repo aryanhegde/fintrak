@@ -1,9 +1,12 @@
 import {
   addMonths,
+  differenceInDays,
   endOfMonth,
   format,
+  isSameDay,
   parse,
   startOfMonth,
+  subDays,
   subMonths,
 } from "date-fns";
 
@@ -33,4 +36,18 @@ export function monthLabel(month: string) {
 
 export function currentMonth(now: Date = new Date()) {
   return format(now, "yyyy-MM");
+}
+
+export function previousRange(startDate: Date, endDate: Date) {
+  const isCalendarMonth =
+    isSameDay(startDate, startOfMonth(startDate)) &&
+    isSameDay(endDate, endOfMonth(startDate));
+
+  if (isCalendarMonth) {
+    const prev = subMonths(startDate, 1);
+    return { start: startOfMonth(prev), end: endOfMonth(prev) };
+  }
+
+  const periodLength = differenceInDays(endDate, startDate) + 1;
+  return { start: subDays(startDate, periodLength), end: subDays(endDate, periodLength) };
 }
