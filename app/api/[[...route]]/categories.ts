@@ -7,6 +7,15 @@ import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { and, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 
+export const DEFAULT_CATEGORY_NAMES = [
+  "Tea",
+  "Cigarettes",
+  "Food",
+  "Snacks",
+  "Travel",
+  "Other",
+];
+
 const app = new Hono()
   .get("/", clerkMiddleware(), async (c) => {
     const auth = getAuth(c);
@@ -22,6 +31,37 @@ const app = new Hono()
       })
       .from(categories)
       .where(eq(categories.userId, auth.userId));
+    return c.json({ data });
+  })
+
+  .post("/bootstrap", clerkMiddleware(), async (c) => {
+    const auth = getAuth(c);
+
+    if (!auth?.userId) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    const existing = await db
+      .select({ id: categories.id })
+      .from(categories)
+      .where(eq(categories.userId, auth.userId))
+      .limit(1);
+
+    if (existing.length > 0) {
+      return c.json({ data: [] });
+    }
+
+    const data = await db
+      .insert(categories)
+      .values(
+        DEFAULT_CATEGORY_NAMES.map((name) => ({
+          id: createId(),
+          name,
+          userId: auth.userId,
+        }))
+      )
+      .returning({ id: categories.id, name: categories.name });
+
     return c.json({ data });
   })
 
