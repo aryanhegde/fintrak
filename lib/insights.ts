@@ -1,7 +1,7 @@
 import { addDays, differenceInCalendarDays, format } from "date-fns";
 
 export type RecurringInput = {
-  payee: string;
+  payee: string | null;
   amount: number; // miliunits, negative = expense
   date: Date;
 };
@@ -24,6 +24,7 @@ const median = (values: number[]) => {
 export function detectRecurring(txns: RecurringInput[]): RecurringPayment[] {
   const groups = new Map<string, RecurringInput[]>();
   for (const txn of txns) {
+    if (!txn.payee) continue; // Skip rows with null payee
     const key = txn.payee.trim().toLowerCase();
     const group = groups.get(key) ?? [];
     group.push(txn);
@@ -75,7 +76,7 @@ export function detectRecurring(txns: RecurringInput[]): RecurringPayment[] {
 
       const last = cluster[cluster.length - 1];
       results.push({
-        payee: last.payee.trim(),
+        payee: last.payee!.trim(),
         amount: last.amount,
         cadence,
         nextDate: format(addDays(last.date, Math.round(medianGap)), "yyyy-MM-dd"),
