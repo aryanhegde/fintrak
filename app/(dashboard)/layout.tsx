@@ -1,4 +1,5 @@
 import Header from "@/components/header";
+import { QuickAddButton } from "@/components/quick-add-button";
 
 // Every dashboard page renders per-user data behind auth and reads
 // useSearchParams in client components; static prerendering is never valid.
@@ -13,6 +14,7 @@ const DashboardLayout = ({ children }: Props) => {
     <div className="min-h-screen bg-slate-50">
       <Header />
       <main className="px-3 lg:px-14">{children}</main>
+      <QuickAddButton />
     </div>
   );
 };
