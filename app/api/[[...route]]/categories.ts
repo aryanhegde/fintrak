@@ -60,6 +60,7 @@ const app = new Hono()
           userId: auth.userId,
         }))
       )
+      .onConflictDoNothing()
       .returning({ id: categories.id, name: categories.name });
 
     return c.json({ data });

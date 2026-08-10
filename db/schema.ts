@@ -1,5 +1,11 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -16,12 +22,21 @@ export const accountsRelations = relations(accounts, ({ many }) => ({
 
 export const insertAccountSchema = createInsertSchema(accounts);
 
-export const categories = pgTable("categories", {
-  id: text("id").primaryKey(),
-  plaidId: text("plaid_id"),
-  name: text("name").notNull(),
-  userId: text("user_id").notNull(),
-});
+export const categories = pgTable(
+  "categories",
+  {
+    id: text("id").primaryKey(),
+    plaidId: text("plaid_id"),
+    name: text("name").notNull(),
+    userId: text("user_id").notNull(),
+  },
+  (table) => ({
+    userIdNameUnique: uniqueIndex("categories_user_id_name_unique").on(
+      table.userId,
+      table.name
+    ),
+  })
+);
 
 export const insertCategorySchema = createInsertSchema(categories);
 
