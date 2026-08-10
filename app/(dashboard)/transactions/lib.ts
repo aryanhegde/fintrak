@@ -36,3 +36,13 @@ export function monogramStyle(name: string) {
 
   return MONOGRAM_STYLES[hash % MONOGRAM_STYLES.length];
 }
+
+export function payeeDisplay(payee: string | null, category: string | null) {
+  if (payee && payee.trim() !== "") {
+    return payee;
+  }
+  if (category && category.trim() !== "") {
+    return category;
+  }
+  return "Cash";
+}

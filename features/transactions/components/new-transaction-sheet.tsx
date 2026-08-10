@@ -12,14 +12,17 @@ import { useCreateTransaction } from "../api/use-create-transaction";
 import { useNewTransaction } from "../hooks/use-new-transaction";
 import { useCreateCategory } from "@/features/categories/api/use-create-category";
 import { getUserCategories } from "@/features/categories/api/use-get-categories";
-import { getUserAccounts } from "@/features/accounts/api/use-get-acounts";
-import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 import { TransactionForm } from "./transaction-form";
 import { Loader2 } from "lucide-react";
 
-const formSchema = insertTransactionSchema.omit({
-  id: true,
-});
+const formSchema = insertTransactionSchema
+  .omit({
+    id: true,
+    accountId: true,
+  })
+  .extend({
+    accountId: z.string().optional(),
+  });
 
 type FormValues = z.input<typeof formSchema>;
 
@@ -39,23 +42,9 @@ export const NewTransactionSheet = () => {
     value: category.id,
   }));
 
-  const accountQuery = getUserAccounts();
-  const accountMutation = useCreateAccount();
-  const onCreateAccount = (name: string) =>
-    accountMutation.mutate({
-      name,
-    });
-  const accountOptions = (accountQuery.data ?? []).map((account) => ({
-    label: account.name,
-    value: account.id,
-  }));
+  const isPending = createMutation.isPending || categoryMutation.isPending;
 
-  const isPending =
-    createMutation.isPending ||
-    categoryMutation.isPending ||
-    accountMutation.isPending;
-
-  const isLoading = categoryQuery.isLoading || accountQuery.isLoading;
+  const isLoading = categoryQuery.isLoading;
 
   const onSubmit = (values: FormValues) => {
     createMutation.mutate(values, {
@@ -82,8 +71,12 @@ export const NewTransactionSheet = () => {
             disabled={isPending}
             categoryOptions={categoryOptions}
             onCreateCategory={onCreateCategory}
-            accountOptions={accountOptions}
-            onCreateAccount={onCreateAccount}
+            defaultValues={{
+              date: new Date(),
+              payee: "",
+              amount: "",
+              notes: "",
+            }}
           />
         )}
       </SheetContent>

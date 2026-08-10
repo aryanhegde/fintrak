@@ -22,16 +22,21 @@ import {
 
 const formSchema = z.object({
   date: z.coerce.date(),
-  accountId: z.string(),
+  accountId: z.string().optional(),
   categoryId: z.string().nullable().optional(),
-  payee: z.string(),
+  payee: z.string().optional(),
   amount: z.string(),
   notes: z.string().nullable().optional(),
 });
 
-const apiSchema = insertTransactionSchema.omit({
-  id: true,
-});
+const apiSchema = insertTransactionSchema
+  .omit({
+    id: true,
+    accountId: true,
+  })
+  .extend({
+    accountId: z.string().optional(),
+  });
 
 type FormValues = z.input<typeof formSchema>;
 type ApiFormValues = z.input<typeof apiSchema>;
@@ -42,9 +47,7 @@ type Props = {
   onSubmit: (values: ApiFormValues) => void;
   onDelete?: () => void;
   disabled?: boolean;
-  accountOptions: { label: string; value: string }[];
   categoryOptions: { label: string; value: string }[];
-  onCreateAccount: (name: string) => void;
   onCreateCategory: (name: string) => void;
 };
 
@@ -54,9 +57,7 @@ export const TransactionForm = ({
   onSubmit,
   onDelete,
   disabled,
-  accountOptions,
   categoryOptions,
-  onCreateAccount,
   onCreateCategory,
 }: Props) => {
   const form = useForm<FormValues>({
@@ -67,11 +68,13 @@ export const TransactionForm = ({
   const handleSubmit = (values: FormValues) => {
     const amount = parseFloat(values.amount);
     const amountInMiliunits = convertAmountToMiliunits(amount);
+    const payee =
+      values.payee && values.payee.trim() !== "" ? values.payee : null;
 
-    console.log("values: ", values);
     onSubmit({
       ...values,
       amount: amountInMiliunits,
+      payee,
     });
   };
 
@@ -92,25 +95,6 @@ export const TransactionForm = ({
             <FormItem>
               <FormControl>
                 <DatePicker
-                  value={field.value}
-                  onChange={field.onChange}
-                  disabled={disabled}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="accountId"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Account</FormLabel>
-              <FormControl>
-                <Select
-                  placeholder="Select an account"
-                  options={accountOptions}
-                  onCreate={onCreateAccount}
                   value={field.value}
                   onChange={field.onChange}
                   disabled={disabled}
@@ -143,12 +127,13 @@ export const TransactionForm = ({
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Payee</FormLabel>
+              <FormLabel>Payee (optional)</FormLabel>
               <FormControl>
                 <Input
                   disabled={disabled}
                   placeholder="Add a payee"
                   {...field}
+                  value={field.value ?? ""}
                 />
               </FormControl>
             </FormItem>

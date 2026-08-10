@@ -17,12 +17,15 @@ import { useOpenTransaction } from "../hooks/use-open-transaction";
 import { TransactionForm } from "./transaction-form";
 import { getUserCategories } from "@/features/categories/api/use-get-categories";
 import { useCreateCategory } from "@/features/categories/api/use-create-category";
-import { getUserAccounts } from "@/features/accounts/api/use-get-acounts";
-import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 
-const formSchema = insertTransactionSchema.omit({
-  id: true,
-});
+const formSchema = insertTransactionSchema
+  .omit({
+    id: true,
+    accountId: true,
+  })
+  .extend({
+    accountId: z.string().optional(),
+  });
 
 type FormValues = z.input<typeof formSchema>;
 
@@ -49,35 +52,27 @@ export const EditTransactionSheet = () => {
     value: category.id,
   }));
 
-  const accountQuery = getUserAccounts();
-  const accountMutation = useCreateAccount();
-  const onCreateAccount = (name: string) =>
-    accountMutation.mutate({
-      name,
-    });
-  const accountOptions = (accountQuery.data ?? []).map((account) => ({
-    label: account.name,
-    value: account.id,
-  }));
-
   const isPending =
     editMutation.isPending ||
     deleteMutation.isPending ||
     transactionQuery.isLoading ||
-    categoryMutation.isPending ||
-    accountMutation.isPending;
+    categoryMutation.isPending;
 
-  const isLoading =
-    transactionQuery.isLoading ||
-    categoryQuery.isLoading ||
-    accountQuery.isLoading;
+  const isLoading = transactionQuery.isLoading || categoryQuery.isLoading;
 
   const onSubmit = (values: FormValues) => {
-    editMutation.mutate(values, {
-      onSuccess: () => {
-        onClose();
-      },
-    });
+    // accountId is unregistered on the form (no account field is rendered),
+    // but react-hook-form keeps it from defaultValues, which are always
+    // populated from the fetched transaction by the time the form can be
+    // submitted — so it round-trips through PATCH unchanged.
+    editMutation.mutate(
+      { ...values, accountId: values.accountId! },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+      }
+    );
   };
 
   const onDelete = async () => {
@@ -133,8 +128,6 @@ export const EditTransactionSheet = () => {
               disabled={isPending}
               categoryOptions={categoryOptions}
               onCreateCategory={onCreateCategory}
-              accountOptions={accountOptions}
-              onCreateAccount={onCreateAccount}
             />
           )}
         </SheetContent>

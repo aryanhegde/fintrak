@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Actions } from "./actions";
 import { AccountColumn } from "./account-column";
 import { CategoryColumn } from "./category-column";
-import { monogramInitials, monogramStyle } from "./lib";
+import { monogramInitials, monogramStyle, payeeDisplay } from "./lib";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -89,7 +89,10 @@ export const columns: ColumnDef<ResponseType>[] = [
     accessorKey: "payee",
     header: ({ column }) => <SortableHeader column={column} label="Payee" />,
     cell: ({ row }) => {
-      const payee = row.getValue("payee") as string;
+      const payee = payeeDisplay(
+        row.getValue("payee") as string | null,
+        row.original.category as string | null
+      );
 
       return (
         <div className="flex min-w-0 items-center gap-x-3">

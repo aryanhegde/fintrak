@@ -4,6 +4,7 @@ import {
   MONOGRAM_STYLES,
   monogramInitials,
   monogramStyle,
+  payeeDisplay,
   summarizeTransactions,
 } from "../lib";
 
@@ -50,5 +51,23 @@ describe("monogramStyle", () => {
 
   it("handles empty names", () => {
     expect(MONOGRAM_STYLES).toContain(monogramStyle(""));
+  });
+});
+
+describe("payeeDisplay", () => {
+  it("prefers the payee when present", () => {
+    expect(payeeDisplay("Tea stall", "Tea")).toBe("Tea stall");
+  });
+
+  it("falls back to the category name when payee is null", () => {
+    expect(payeeDisplay(null, "Tea")).toBe("Tea");
+  });
+
+  it("falls back to Cash when both are null", () => {
+    expect(payeeDisplay(null, null)).toBe("Cash");
+  });
+
+  it("treats an empty-string payee as missing", () => {
+    expect(payeeDisplay("", "Snacks")).toBe("Snacks");
   });
 });
