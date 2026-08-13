@@ -124,7 +124,7 @@ const TransactionsPage = () => {
 
   if (transactionsQuery.isLoading) {
     return (
-      <div className="mx-auto w-full max-w-screen-2xl py-8 pb-10">
+      <div className="mx-auto w-full max-w-screen-2xl pb-10 -mt-24">
         <div className="flex flex-col gap-6">
           <PageHeader subtitle={dateRange} actions={headerActions} />
           <SummaryTilesLoading />
@@ -148,7 +148,7 @@ const TransactionsPage = () => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-screen-2xl py-8 pb-10">
+    <div className="mx-auto w-full max-w-screen-2xl pb-10 -mt-24">
       <div className="flex flex-col gap-6">
         <PageHeader subtitle={subtitle} actions={headerActions} />
         <TransactionsSummary transactions={transactions} />

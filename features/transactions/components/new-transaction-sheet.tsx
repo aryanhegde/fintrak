@@ -31,7 +31,7 @@ export const NewTransactionSheet = () => {
 
   const createMutation = useCreateTransaction();
 
-  const categoryQuery = getUserCategories();
+  const categoryQuery = getUserCategories({ enabled: isOpen });
   const categoryMutation = useCreateCategory();
   const onCreateCategory = (name: string) =>
     categoryMutation.mutate({

@@ -2,6 +2,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/hono";
+import { parseApiResponse } from "@/lib/api-response";
 import { toast } from "sonner";
 
 type ResponseType = InferResponseType<
@@ -19,7 +20,7 @@ export const useBulkDeleteAccounts = () => {
       const response = await client.api.accounts["bulk-delete"]["$post"]({
         json,
       });
-      return await response.json();
+      return parseApiResponse<ResponseType>(response);
     },
     onSuccess: () => {
       toast.success("Account Deleted");

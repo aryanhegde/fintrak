@@ -3,12 +3,16 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
 import { client } from "@/lib/hono";
+import { effectiveMonthRange } from "@/lib/query-range";
 import { convertAmountFromMiliunits } from "@/lib/utils";
 
 export const getUserSummary = () => {
   const params = useSearchParams();
-  const from = params.get("from") || "";
-  const to = params.get("to") || "";
+  const now = new Date();
+  const { from, to } = effectiveMonthRange(
+    { from: params.get("from"), to: params.get("to") },
+    now
+  );
   const accountId = params.get("accountId") || "";
 
   const query = useQuery({

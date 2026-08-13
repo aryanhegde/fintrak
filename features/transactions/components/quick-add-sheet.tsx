@@ -56,7 +56,7 @@ export const QuickAddSheet = () => {
   const [day, setDay] = useState<"today" | "yesterday">("today");
 
   const createMutation = useCreateTransaction();
-  const categoryQuery = getUserCategories();
+  const categoryQuery = getUserCategories({ enabled: isOpen });
   const bootstrapMutation = useBootstrapCategories();
   const bootstrapAttempted = useRef(false);
 

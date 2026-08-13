@@ -2,10 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import { client } from "@/lib/hono";
 
-export const getUserCategories = () => {
+export const getUserCategories = (
+  { enabled = true }: { enabled?: boolean } = {}
+) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const query = useQuery({
     queryKey: ["categories"],
+    enabled,
     queryFn: async () => {
       const response = await client.api.categories.$get();
 

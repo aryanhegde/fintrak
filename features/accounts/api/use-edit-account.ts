@@ -2,6 +2,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/hono";
+import { parseApiResponse } from "@/lib/api-response";
 import { toast } from "sonner";
 
 type ResponseType = InferResponseType<
@@ -16,19 +17,11 @@ export const useEditAccount = (id?: string) => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async (json) => {
-      // Clean Up Code
-      console.log(
-        "Sending PATCH request to:",
-        client.api.accounts[":id"]["$patch"]
-      );
-      console.log("Request Params:", { id });
-      console.log("Request Body:", json);
-
       const response = await client.api.accounts[":id"]["$patch"]({
         param: { id },
         json,
       });
-      return await response.json();
+      return parseApiResponse<ResponseType>(response);
     },
     onSuccess: () => {
       toast.success("Account Updated");

@@ -1,53 +1,97 @@
 "use client";
 
-import { useMemo } from "react";
+import * as React from "react";
 
-import { SingleValue } from "react-select";
+import {
+  components,
+  InputProps,
+  SelectInstance,
+  SingleValue,
+} from "react-select";
 import CreateableSelect from "react-select/creatable";
+
+type Option = { label: string; value: string };
 
 type Props = {
   onChange: (value?: string) => void;
   onCreate?: (value: string) => void;
-  options?: { label: string; value: string }[];
+  options?: Option[];
   value?: string | null | undefined;
   disabled?: boolean;
   placeholder?: string;
+  id?: string;
+  inputId?: string;
+  "aria-label"?: React.AriaAttributes["aria-label"];
+  "aria-describedby"?: React.AriaAttributes["aria-describedby"];
+  "aria-invalid"?: React.AriaAttributes["aria-invalid"];
 };
 
-export const Select = ({
-  onChange,
-  onCreate,
-  disabled,
-  options = [],
-  placeholder,
-  value,
-}: Props) => {
-  const onSelect = (option: SingleValue<{ label: string; value: string }>) => {
-    onChange(option?.value);
-  };
+export const Select = React.forwardRef<SelectInstance<Option>, Props>(
+  (
+    {
+      onChange,
+      onCreate,
+      disabled,
+      options = [],
+      placeholder,
+      value,
+      id,
+      inputId,
+      "aria-label": ariaLabel,
+      "aria-describedby": ariaDescribedBy,
+      "aria-invalid": ariaInvalid,
+    },
+    ref
+  ) => {
+    const onSelect = (option: SingleValue<Option>) => {
+      onChange(option?.value);
+    };
 
-  const formattedValue = useMemo(() => {
-    return options.find((option) => option.value === value);
-  }, [options, value]);
+    const formattedValue = React.useMemo(() => {
+      return options.find((option) => option.value === value);
+    }, [options, value]);
 
-  return (
-    <CreateableSelect
-      placeholder={placeholder}
-      className="text-sm h-10"
-      styles={{
-        control: (base) => ({
-          ...base,
-          borderColor: "#e2e8f0",
-          ":hover": {
+    const Input = React.useMemo(
+      () =>
+        function SelectInput(inputProps: InputProps<Option, false>) {
+          return (
+            <components.Input
+              {...inputProps}
+              aria-describedby={
+                ariaDescribedBy ?? inputProps["aria-describedby"]
+              }
+            />
+          );
+        },
+      [ariaDescribedBy]
+    );
+
+    return (
+      <CreateableSelect
+        ref={ref}
+        inputId={inputId ?? id}
+        aria-label={ariaLabel}
+        aria-invalid={ariaInvalid}
+        placeholder={placeholder}
+        className="text-sm h-10"
+        components={{ Input }}
+        styles={{
+          control: (base) => ({
+            ...base,
             borderColor: "#e2e8f0",
-          },
-        }),
-      }}
-      value={formattedValue}
-      onChange={onSelect}
-      options={options}
-      onCreateOption={onCreate}
-      isDisabled={disabled}
-    />
-  );
-};
+            ":hover": {
+              borderColor: "#e2e8f0",
+            },
+          }),
+        }}
+        value={formattedValue}
+        onChange={onSelect}
+        options={options}
+        onCreateOption={onCreate}
+        isDisabled={disabled}
+      />
+    );
+  }
+);
+
+Select.displayName = "Select";

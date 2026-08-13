@@ -12,16 +12,24 @@ import {
   nextMonth,
   prevMonth,
 } from "@/lib/month";
+import {
+  effectiveMonthRange,
+  shouldCanonicalizeMonthRange,
+} from "@/lib/query-range";
 import { Button } from "@/components/ui/button";
 
 export const MonthPicker = () => {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
+  const now = new Date();
+  const thisMonth = currentMonth(now);
 
   const from = params.get("from");
-  // Selected month is derived from the from param (yyyy-MM-dd → yyyy-MM).
-  const month = from ? from.slice(0, 7) : currentMonth();
+  const to = params.get("to");
+  const effectiveRange = effectiveMonthRange({ from, to }, now);
+  // Selected month is derived from the effective from date (yyyy-MM-dd → yyyy-MM).
+  const month = effectiveRange.from.slice(0, 7);
 
   const pushMonth = (target: string, replace = false) => {
     const range = monthRange(target);
@@ -44,13 +52,13 @@ export const MonthPicker = () => {
   };
 
   useEffect(() => {
-    if (!from) {
+    if (shouldCanonicalizeMonthRange({ from, to })) {
       pushMonth(month, true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [from, to, month]);
 
-  const atCurrentMonth = month >= currentMonth();
+  const atCurrentMonth = month >= thisMonth;
 
   return (
     <div className="flex items-center gap-x-2">

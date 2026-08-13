@@ -96,7 +96,7 @@ const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
   };
 
   return (
-    <div className="mx-auto w-full max-w-screen-2xl py-8 pb-10">
+    <div className="mx-auto w-full max-w-screen-2xl pb-10 -mt-24">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-y-4 sm:flex-row sm:items-end sm:justify-between">
           <div>

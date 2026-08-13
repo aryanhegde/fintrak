@@ -93,6 +93,7 @@ export const TransactionForm = ({
           control={form.control}
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Date</FormLabel>
               <FormControl>
                 <DatePicker
                   value={field.value}
@@ -100,6 +101,7 @@ export const TransactionForm = ({
                   disabled={disabled}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -119,6 +121,7 @@ export const TransactionForm = ({
                   disabled={disabled}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -136,6 +139,7 @@ export const TransactionForm = ({
                   value={field.value ?? ""}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -152,6 +156,7 @@ export const TransactionForm = ({
                   placeholder="0.00"
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -169,6 +174,7 @@ export const TransactionForm = ({
                   placeholder="Optional notes"
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />

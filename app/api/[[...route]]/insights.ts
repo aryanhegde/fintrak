@@ -1,39 +1,28 @@
-import { z } from "zod";
 import { Hono } from "hono";
-import { zValidator } from "@hono/zod-validator";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
-import { subDays, parse, differenceInDays } from "date-fns";
+import { subDays, differenceInDays } from "date-fns";
 import { and, desc, eq, gte, lt, lte, sql, sum } from "drizzle-orm";
 
 import { db } from "@/db/drizzle";
 import { accounts, categories, transactions } from "@/db/schema";
 import { calculatePercentageChange } from "@/lib/utils";
 import { buildInsights, computeHealthScore, detectRecurring } from "@/lib/insights";
+import {
+  apiValidator,
+  dateRangeQuerySchema,
+} from "@/lib/api-validation";
 
 const app = new Hono().get(
   "/",
   clerkMiddleware(),
-  zValidator(
-    "query",
-    z.object({
-      from: z.string().optional(),
-      to: z.string().optional(),
-      accountId: z.string().optional(),
-    })
-  ),
+  apiValidator("query", dateRangeQuerySchema),
   async (c) => {
     const auth = getAuth(c);
-    const { from, to, accountId } = c.req.valid("query");
+    const { accountId, startDate, endDate } = c.req.valid("query");
 
     if (!auth?.userId) {
       return c.json({ error: "Unauthorized" }, 401);
     }
-
-    const defaultTo = new Date();
-    const defaultFrom = subDays(defaultTo, 30);
-
-    const startDate = from ? parse(from, "yyyy-MM-dd", new Date()) : defaultFrom;
-    const endDate = to ? parse(to, "yyyy-MM-dd", new Date()) : defaultTo;
 
     const periodLength = differenceInDays(endDate, startDate) + 1;
     const lastPeriodStart = subDays(startDate, periodLength);

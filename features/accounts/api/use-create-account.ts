@@ -2,6 +2,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/hono";
+import { parseApiResponse } from "@/lib/api-response";
 import { toast } from "sonner";
 
 type ResponseType = InferResponseType<typeof client.api.accounts.$post>;
@@ -13,7 +14,7 @@ export const useCreateAccount = () => {
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async (json) => {
       const response = await client.api.accounts.$post({ json });
-      return await response.json();
+      return parseApiResponse<ResponseType>(response);
     },
     onSuccess: () => {
       toast.success("Account Created");

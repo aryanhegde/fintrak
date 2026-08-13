@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+  index,
   integer,
   pgTable,
   text,
@@ -9,18 +10,33 @@ import {
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const accounts = pgTable("accounts", {
-  id: text("id").primaryKey(),
-  plaidId: text("plaid_id"),
-  name: text("name").notNull(),
-  userId: text("user_id").notNull(),
-});
+import {
+  accountNameSchema,
+  categoryNameSchema,
+  notesSchema,
+  payeeSchema,
+} from "@/lib/validation";
+
+export const accounts = pgTable(
+  "accounts",
+  {
+    id: text("id").primaryKey(),
+    plaidId: text("plaid_id"),
+    name: text("name").notNull(),
+    userId: text("user_id").notNull(),
+  },
+  (table) => ({
+    userIdIdx: index("accounts_user_id_idx").on(table.userId),
+  })
+);
 
 export const accountsRelations = relations(accounts, ({ many }) => ({
   transactions: many(transactions),
 }));
 
-export const insertAccountSchema = createInsertSchema(accounts);
+export const insertAccountSchema = createInsertSchema(accounts, {
+  name: accountNameSchema,
+});
 
 export const categories = pgTable(
   "categories",
@@ -38,23 +54,34 @@ export const categories = pgTable(
   })
 );
 
-export const insertCategorySchema = createInsertSchema(categories);
-
-export const transactions = pgTable("transactions", {
-  id: text("id").primaryKey(),
-  amount: integer("amount").notNull(),
-  payee: text("payee"),
-  notes: text("notes"),
-  date: timestamp("date", { mode: "date" }).notNull(),
-  accountId: text("account_id")
-    .references(() => accounts.id, {
-      onDelete: "cascade",
-    })
-    .notNull(),
-  categoryId: text("category_id").references(() => categories.id, {
-    onDelete: "set null",
-  }),
+export const insertCategorySchema = createInsertSchema(categories, {
+  name: categoryNameSchema,
 });
+
+export const transactions = pgTable(
+  "transactions",
+  {
+    id: text("id").primaryKey(),
+    amount: integer("amount").notNull(),
+    payee: text("payee"),
+    notes: text("notes"),
+    date: timestamp("date", { mode: "date" }).notNull(),
+    accountId: text("account_id")
+      .references(() => accounts.id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
+    categoryId: text("category_id").references(() => categories.id, {
+      onDelete: "set null",
+    }),
+  },
+  (table) => ({
+    accountIdDateIdx: index("transactions_account_id_date_idx").on(
+      table.accountId,
+      table.date
+    ),
+  })
+);
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({
   transactions: one(accounts, {
@@ -65,4 +92,6 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
 
 export const insertTransactionSchema = createInsertSchema(transactions, {
   date: z.coerce.date(),
+  payee: payeeSchema,
+  notes: notesSchema,
 });

@@ -16,33 +16,54 @@ type Props = {
   value?: Date;
   onChange?: SelectSingleEventHandler;
   disabled?: boolean;
-};
+} & Pick<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  "id" | "aria-describedby" | "aria-invalid"
+>;
 
-export const DatePicker = ({ value, onChange, disabled }: Props) => {
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          disabled={disabled}
-          variant="outline"
-          className={cn(
-            "w-full justify-start text-left font-normal",
-            !value && "text-muted-foreground"
-          )}
-        >
-          <CalendarIcon className="size-4 mr-2" />
-          {value ? format(value, "PPP") : <span>Pick a date</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent>
-        <Calendar
-          mode="single"
-          selected={value}
-          onSelect={onChange}
-          disabled={disabled}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
-  );
-};
+export const DatePicker = React.forwardRef<HTMLButtonElement, Props>(
+  (
+    {
+      value,
+      onChange,
+      disabled,
+      id,
+      "aria-describedby": ariaDescribedBy,
+      "aria-invalid": ariaInvalid,
+    },
+    ref
+  ) => {
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            ref={ref}
+            id={id}
+            aria-describedby={ariaDescribedBy}
+            aria-invalid={ariaInvalid}
+            disabled={disabled}
+            variant="outline"
+            className={cn(
+              "w-full justify-start text-left font-normal",
+              !value && "text-muted-foreground"
+            )}
+          >
+            <CalendarIcon className="size-4 mr-2" />
+            {value ? format(value, "PPP") : <span>Pick a date</span>}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent>
+          <Calendar
+            mode="single"
+            selected={value}
+            onSelect={onChange}
+            disabled={disabled}
+            initialFocus
+          />
+        </PopoverContent>
+      </Popover>
+    );
+  }
+);
+
+DatePicker.displayName = "DatePicker";
